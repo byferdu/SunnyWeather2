@@ -1,9 +1,9 @@
 package com.example.sunnyweather2.logic.model
 
-data class PlaceResponse (val status:String,val place:List<Place>){
-}
+import com.google.gson.annotations.SerializedName
 
-data class Place(val name:String,val location:Location) {
+class PlaceResponse (val status:String, val places:List<Place>)
 
-}
-data class Location(val lng:String,val let:String)
+class Place(val name:String,val location:Location,@SerializedName("formatted_address") val address:String)
+
+class Location(val lng:String,val let:String)
