@@ -11,9 +11,11 @@ import kotlin.coroutines.suspendCoroutine
 
 object SunnyNetwork {
     private val placeService = ServiceCreator.create(PlaceService::class.java)
+    private val weatherService = ServiceCreator.create(WeatherService::class.java)
 
-    suspend fun searchPlace(query: String) =
-        placeService.searchPlace(query).await()
+    suspend fun searchPlace(query: String) = placeService.searchPlace(query).await()
+    suspend fun getRealTimeWeather(lng: String, lat: String) = weatherService.getRealtimeWeather(lng,lat).await()
+    suspend fun getDailyWeather(lng: String, lat: String) = weatherService.getDailyWeather(lng,lat).await()
 
     private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine {
@@ -23,17 +25,13 @@ object SunnyNetwork {
                     val body = response.body()
                     if (body != null) it.resume(body)
                     else {
-                        it.resumeWithException(RuntimeException("response body is null"));Log.d("TAG", "onFailure: $body"
-                        )
+                        it.resumeWithException(RuntimeException("response body is null"));Log.d("TAG", "onFailure: $body")
                     }
                 }
                 override fun onFailure(call: Call<T>, t: Throwable) {
                     //TODO("Not yet implemented")
                     it.resumeWithException(t)
-
                 }
-
-
             })
         }
     }
